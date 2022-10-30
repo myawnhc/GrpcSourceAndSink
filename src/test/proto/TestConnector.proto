@@ -1,0 +1,20 @@
+syntax = "proto3";
+package account;
+option java_package = "org.hazelcast.grpcconnector";
+
+service TestConnector {
+  rpc SingleToSingle (SimpleRequest) returns (SimpleResponse) {}
+  rpc SingleToStream (SimpleRequest) returns (stream SimpleResponse) {}
+
+  rpc StreamToSingle (stream SimpleRequest) returns (SimpleResponse) {}
+  rpc StreamToStream (stream SimpleRequest) returns (stream SimpleResponse) {}
+
+}
+
+message SimpleRequest {
+  string request = 1;
+}
+
+message SimpleResponse {
+  string response = 1;
+}
