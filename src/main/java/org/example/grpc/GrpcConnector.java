@@ -1,6 +1,5 @@
 package org.example.grpc;
 
-import com.google.protobuf.GeneratedMessageV3;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.HazelcastInstanceAware;
 import com.hazelcast.jet.pipeline.Sink;
@@ -8,7 +7,6 @@ import com.hazelcast.jet.pipeline.SinkBuilder;
 import com.hazelcast.jet.pipeline.SourceBuilder;
 import com.hazelcast.jet.pipeline.StreamSource;
 import com.hazelcast.map.IMap;
-import io.grpc.BindableService;
 
 import java.util.logging.Logger;
 
@@ -23,7 +21,7 @@ public class GrpcConnector implements HazelcastInstanceAware {
     }
 
     // patterned off of https://docs.hazelcast.com/hazelcast/5.2/pipelines/custom-stream-source
-    public static <R extends GeneratedMessageV3> StreamSource<R> grpcSource(String serviceName, String apiName) {
+    public static <R> StreamSource<R> grpcSource(String serviceName, String apiName) {
         return SourceBuilder
                 .stream("grpc-source", ctx -> new GrpcContext<R,R>(ctx.hazelcastInstance(), serviceName, apiName))
                 .<R>fillBufferFn((grpcContext, sourceBuffer) -> {
@@ -40,26 +38,23 @@ public class GrpcConnector implements HazelcastInstanceAware {
                 .build();
     }
 
-    public static <R extends GeneratedMessageV3> Sink<Object> grpcSink(String serviceName, String apiName) {
+    public static <R> Sink<R> grpcSink(String serviceName, String apiName) {
         return SinkBuilder.sinkBuilder(
                         "grpc-sink", pctx -> new GrpcContext<R,R>(pctx.hazelcastInstance(), serviceName, apiName))
-                .receiveFn((writer, item) -> {
-                    // TODO: we may pass a tuple - completion flag, item
-                    writer.write((R) item);
-                    // TODO: if streaming this is conditional .
-                    writer.markComplete();
+                .<R>receiveFn((writer, item) -> {
+                    writer.write((MessageWithUUID<R>) item);
                 })
                 .destroyFn(GrpcContext::close)
                 .build();
     }
 
-    private static class GrpcContext<REQ extends GeneratedMessageV3, RESP extends GeneratedMessageV3> {
+    private static class GrpcContext<REQ, RESP> {
         //private String serviceName;
-        private final APIBufferPair<REQ,RESP> apiHandler;
+        private final APIBufferPair<REQ,RESP> bufferPair;
 
         public GrpcContext(HazelcastInstance hazelcast, String serviceName, String apiName)  {
             IMap<String, APIBufferPair<REQ,RESP>> handlers = hazelcast.getMap(serviceName+"_APIS");
-            apiHandler = handlers.get(apiName);
+            bufferPair = handlers.get(apiName);
         }
 
         public void close() {
@@ -67,22 +62,12 @@ public class GrpcConnector implements HazelcastInstanceAware {
         }
 
         public REQ read()  {
-            return apiHandler.getRequest();
+            return bufferPair.getRequest();
         }
 
-        public boolean isComplete() {
-            // TODO: for streaming requests
-            return false;
-        }
-
-        public void write(RESP item) {
-            apiHandler.putResponse(item);
-        }
-
-        public void markComplete() {
-            // TODO: for streaming responses
+        public void write(MessageWithUUID<RESP> item) {
+            bufferPair.putResponse(item);
         }
     }
-
 }
 

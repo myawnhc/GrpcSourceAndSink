@@ -4,19 +4,24 @@ import com.google.common.util.concurrent.ListenableFuture;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import org.hazelcast.grpcconnector.TestConnectorGrpc;
+import org.hazelcast.grpcconnector.ExamplesGrpc;
 
 import java.util.logging.Logger;
 
-import static org.hazelcast.grpcconnector.TestConnectorOuterClass.SimpleRequest;
-import static org.hazelcast.grpcconnector.TestConnectorOuterClass.SimpleResponse;
+import static org.hazelcast.grpcconnector.ExamplesOuterClass.SimpleRequest;
+import static org.hazelcast.grpcconnector.ExamplesOuterClass.SimpleResponse;
+import static org.hazelcast.grpcconnector.ExamplesOuterClass.RequestWithValue;
+import static org.hazelcast.grpcconnector.ExamplesOuterClass.ResponseWithValue;
+import static org.hazelcast.grpcconnector.ExamplesGrpc.ExamplesBlockingStub;
+import static org.hazelcast.grpcconnector.ExamplesGrpc.ExamplesFutureStub;
+import static org.hazelcast.grpcconnector.ExamplesGrpc.ExamplesStub;
 
 public class SampleClient {
     private static final Logger logger = Logger.getLogger(SampleClient.class.getName());
 
-    private final TestConnectorGrpc.TestConnectorStub stub;
-    private final TestConnectorGrpc.TestConnectorBlockingStub blockingStub;
-    private final TestConnectorGrpc.TestConnectorFutureStub futureStub;
+    private final ExamplesStub asyncStub;
+    private final ExamplesBlockingStub blockingStub;
+    private final ExamplesFutureStub futureStub;
     private final ManagedChannel channel;
 
     public SampleClient() {
@@ -25,39 +30,26 @@ public class SampleClient {
                 .usePlaintext()
                 .build();
 
-        // Not sure different stubs will affect the behavior of pipeline so we might
-        // actually only need one of them ... but good to document all the ways that
-        // this gRPC APIs could be used
-        stub = TestConnectorGrpc.newStub(channel);
-        blockingStub = TestConnectorGrpc.newBlockingStub(channel);
-        futureStub = TestConnectorGrpc.newFutureStub(channel);
+        // Not all interaction styles are supported against all stubs; see the unit tests for legal combinations
+        asyncStub    = ExamplesGrpc.newStub(channel);
+        blockingStub = ExamplesGrpc.newBlockingStub(channel);
+        futureStub   = ExamplesGrpc.newFutureStub(channel);
     }
 
-    // Methods to support unit tests
-    public void singleToSingle(SimpleRequest request, StreamObserver<SimpleResponse> responseObserver) {
-        stub.singleToSingle(request, responseObserver);
+    // Client-side implementation of the API
+    public void sayHelloAsync(SimpleRequest request, StreamObserver<SimpleResponse> responseObserver) {
+        asyncStub.sayHello(request, responseObserver);
     }
-    public SimpleResponse singleToSingleBlocking(SimpleRequest request) {
-        return blockingStub.singleToSingle(request);
+    public SimpleResponse sayHelloBlocking(SimpleRequest request) {
+        return blockingStub.sayHello(request);
     }
-    public ListenableFuture<SimpleResponse> singleToSingleFuture(SimpleRequest request) {
-        return futureStub.singleToSingle(request);
+    public ListenableFuture<SimpleResponse> sayHelloFuture(SimpleRequest request) {
+        return futureStub.sayHello(request);
     }
 
-//    public static void main(String[] args) {
-//        SampleClient client = new SampleClient();
-//
-//        // Test Unary method - should be moved to a Junit class that uses
-//        // per-API methods exposed by the SampleClient
-//        // This will expand to TestUnary, TestBlockingUnary, TestFutureUnary
-//        // Then same 3 varitions of ClientStreaming, ServerStreaming, BidirectionalStreaming
-//        SimpleRequest request = SimpleRequest.newBuilder()
-//                .setRequest("unary method request")
-//                .build();
-//        System.out.println("Sending request: " + request.getRequest());
-//        SimpleResponse response = client.singleToSingleBlocking(request);
-//        System.out.println("Got response: " + response.getResponse());
-//
-//    }
-
+    public StreamObserver<RequestWithValue> addAsync(StreamObserver<ResponseWithValue> responseObserver) {
+        // This is not available via the blocking or future stub
+        StreamObserver<RequestWithValue> requestObserver = asyncStub.add(responseObserver);
+        return requestObserver;
+    }
 }

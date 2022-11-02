@@ -66,14 +66,4 @@ public class GrpcServer {
             server.awaitTermination();
         }
     }
-
-//    /**
-//     * Main launches the server from the command line.
-//     */
-//    public static void main(String[] args) throws IOException, InterruptedException {
-//        final GrpcServer server = new GrpcServer();
-//        server.start();
-//        server.blockUntilShutdown();
-//    }
-
 }

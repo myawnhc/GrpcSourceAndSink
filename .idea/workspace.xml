@@ -5,20 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ae74d82-7251-4bcf-877c-e6b8286030dd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/APIBufferPair.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcConnector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/SampleClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/SampleService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/UnaryPipeline.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/UnitTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/proto/TestConnector.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/MessageWithUUID.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/StreamingMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/APIUnitTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/RequestWithValueAggregator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/SampleNonHZService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/proto/Examples.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/APIBufferPair.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/APIBufferPair.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcConnector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/SampleClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/SampleClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/SampleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/SampleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/UnaryPipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/SamplePipelines.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/UnitTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/proto/TestConnector.proto" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,17 +59,21 @@
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="org.example" />
     </key>
+    <key name="MoveInnerDialog.RECENTS_KEY">
+      <recent name="org.example" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.example" />
       <recent name="org.example.grpc" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.UnitTests">
+  <component name="RunManager" selected="JUnit.APIUnitTests">
     <configuration name="SampleService" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.example.SampleService" />
       <module name="GrpcSourceAndSink" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.*" />
+          <option name="PATTERN" value="org.example.grpc.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -76,12 +81,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UnaryPipeline" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.example.UnaryPipeline" />
+    <configuration name="org.example.SamplePipelines" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.example.SamplePipelines" />
       <module name="GrpcSourceAndSink" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.*" />
+          <option name="PATTERN" value="org.example.grpc.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -89,8 +94,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="org.example.SampleClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.example.SampleClient" />
+    <configuration name="APIUnitTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="GrpcSourceAndSink" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.grpc.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.APIUnitTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="APIUnitTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="GrpcSourceAndSink" />
       <extension name="coverage">
         <pattern>
@@ -98,6 +117,9 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.APIUnitTests" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -110,28 +132,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UnitTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="GrpcSourceAndSink" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.example.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.example" />
-      <option name="MAIN_CLASS_NAME" value="org.example.UnitTests" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.UnitTests" />
-        <item itemvalue="Application.UnaryPipeline" />
-        <item itemvalue="Application.SampleService" />
+        <item itemvalue="JUnit.APIUnitTests" />
+        <item itemvalue="Application.org.example.SamplePipelines" />
+        <item itemvalue="Application.org.example.SampleService" />
+        <item itemvalue="JUnit.APIUnitTests" />
         <item itemvalue="JUnit.All in GrpcSourceAndSink" />
-        <item itemvalue="Application.org.example.SampleClient" />
       </list>
     </recent_temporary>
   </component>
@@ -144,20 +151,27 @@
       <option name="presentableId" value="Default" />
       <updated>1666877704026</updated>
     </task>
+    <task id="LOCAL-00001" summary="Grpc Source and Sink initial version complete: Unary messages now working end-to-end">
+      <created>1667139306984</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1667139306984</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Grpc Source and Sink initial version complete: Unary messages now working end-to-end" />
+    <option name="LAST_COMMIT_MESSAGE" value="Grpc Source and Sink initial version complete: Unary messages now working end-to-end" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcConnector.java</url>
-          <line>21</line>
+          <line>19</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/org/example/UnitTests.java</url>
-          <line>89</line>
-          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
