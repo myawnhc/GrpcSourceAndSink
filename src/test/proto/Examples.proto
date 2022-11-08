@@ -6,7 +6,7 @@ service Examples {
   rpc SayHello (SimpleRequest) returns (SimpleResponse) {}            // Unary
   rpc Add (stream RequestWithValue) returns (ResponseWithValue) {}    // Client Streaming
   rpc Subscribe (SimpleRequest) returns (stream SimpleResponse) {}    // Server Streaming
-  rpc Chat (stream SimpleRequest) returns (stream SimpleResponse) {}  // Bidirectional Streaming
+  rpc Chat (stream ChatMessage) returns (stream ChatMessage) {}       // Bidirectional Streaming
 }
 
 message SimpleRequest {
@@ -23,4 +23,10 @@ message RequestWithValue {
 
 message ResponseWithValue {
   int32 outputValue = 1;
+}
+
+message ChatMessage {
+  string senderID = 1;
+  string receiverID = 2;
+  string message = 3;
 }

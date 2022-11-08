@@ -6,12 +6,15 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import org.hazelcast.grpcconnector.ExamplesGrpc;
 
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 import static org.hazelcast.grpcconnector.ExamplesOuterClass.SimpleRequest;
 import static org.hazelcast.grpcconnector.ExamplesOuterClass.SimpleResponse;
 import static org.hazelcast.grpcconnector.ExamplesOuterClass.RequestWithValue;
 import static org.hazelcast.grpcconnector.ExamplesOuterClass.ResponseWithValue;
+import static org.hazelcast.grpcconnector.ExamplesOuterClass.ChatMessage;
+
 import static org.hazelcast.grpcconnector.ExamplesGrpc.ExamplesBlockingStub;
 import static org.hazelcast.grpcconnector.ExamplesGrpc.ExamplesFutureStub;
 import static org.hazelcast.grpcconnector.ExamplesGrpc.ExamplesStub;
@@ -40,9 +43,11 @@ public class SampleClient {
     public void sayHelloAsync(SimpleRequest request, StreamObserver<SimpleResponse> responseObserver) {
         asyncStub.sayHello(request, responseObserver);
     }
+
     public SimpleResponse sayHelloBlocking(SimpleRequest request) {
         return blockingStub.sayHello(request);
     }
+
     public ListenableFuture<SimpleResponse> sayHelloFuture(SimpleRequest request) {
         return futureStub.sayHello(request);
     }
@@ -51,5 +56,21 @@ public class SampleClient {
         // This is not available via the blocking or future stub
         StreamObserver<RequestWithValue> requestObserver = asyncStub.add(responseObserver);
         return requestObserver;
+    }
+
+    public void subscribeAsync(SimpleRequest request, StreamObserver<SimpleResponse> responseObserver) {
+        // This is not available via the future stub
+        asyncStub.subscribe(request, responseObserver);
+    }
+
+    public Iterator<SimpleResponse> subscribeBlocking(SimpleRequest request) {
+        // This is not available via the future stub
+        return blockingStub.subscribe(request);
+    }
+
+    /** Returns request observer that caller will use to send */
+    public StreamObserver<ChatMessage> chat(StreamObserver<ChatMessage> responseObserver) {
+        // This is not available via the future or blocking stubs
+        return asyncStub.chat(responseObserver);
     }
 }

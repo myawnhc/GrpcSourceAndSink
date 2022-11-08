@@ -11,22 +11,26 @@ import java.util.UUID;
  */
 public class StreamingMessage<M> implements Serializable {
 
-    MessageWithUUID<M> message;
+    UUID identifier;
+    M message;
     /**
      * Used to signal when stream has been marked completed via onComplete() call
      */
     boolean completed;
 
-    public StreamingMessage(MessageWithUUID<M> message) {
+    public StreamingMessage(UUID identifier, M message) {
+        this.identifier = identifier;
         this.message = message;
         this.completed = false;
     }
 
-    public StreamingMessage(MessageWithUUID<M> message, boolean complete) {
+    public StreamingMessage(UUID identifier, M message, boolean complete) {
+        this.identifier = identifier;
         this.message = message;
         this.completed = complete;
     }
 
-    public MessageWithUUID<M> getMessage() { return message; }
+    public UUID getIdentifier() { return identifier; }
+    public M getMessage() { return message; }
     public boolean isComplete() { return completed; }
 }
