@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -61,17 +62,16 @@ public class APIBufferPair<REQ, RESP> implements Serializable, HazelcastInstance
 
     /** Called by the service to queue up a request for the pipeline */
     public void putUnaryRequest(UUID identifier, REQ request)  {
-        logger.info("Writing unary request " + request.toString() + " for id " + identifier);
         try {
             MessageWithUUID<REQ> wrappedMessage = new MessageWithUUID<>(identifier, request);
-            unaryRequests.put(wrappedMessage);
-        } catch (InterruptedException e) {
+            unaryRequests.put(wrappedMessage); // may block
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void putUnaryResponse(MessageWithUUID<RESP> response) {
-        System.out.println("Writing unary response " + response.toString() + " to map " + unaryResponses.getName());
+        //System.out.println("Writing unary response " + response.toString() + " to map " + unaryResponses.getName());
         UUID identifier = response.getIdentifier();
         unaryResponses.put(identifier, response.getMessage());
     }
@@ -83,20 +83,29 @@ public class APIBufferPair<REQ, RESP> implements Serializable, HazelcastInstance
      * @return
      */
     public RESP getUnaryResponse(UUID identifier) {
-        System.out.println("Reading unary response from " + unaryResponses.getName() + " for id " + identifier);
+        //System.out.println("Reading unary response from " + unaryResponses.getName() + " for id " + identifier);
         RESP response = null;
         int timesSlept = 0;
         while (response == null) {
-            response = unaryResponses.get(identifier);
+            response = unaryResponses.remove(identifier);
             if (response == null) {
                 try {
-                    MILLISECONDS.sleep((long) Math.pow(2, timesSlept++));
+                    long timeToSleep = (long) Math.pow(2, timesSlept++);
+//                    if (timesSlept > 10) {
+//                        logger.info("getUnaryRespoonse " + identifier + " sleeping for " + timeToSleep + "ms.  Unread responses = " + unaryResponses.size());
+//                    }
+                    if (timesSlept > 14) {
+                        logger.warning("getUnaryResponse giving up waiting and returning null");
+                        return response;
+                    }
+                    MILLISECONDS.sleep(timeToSleep);
                 } catch (InterruptedException e) {
-                    ;
+                    e.printStackTrace();
                 }
             }
         }
-        System.out.println("Done reading unary response " + response + " from " + unaryResponses.getName() + " for id " + identifier);
+        //System.out.println("Done reading unary response " + response + " from " + unaryResponses.getName() + " for id " + identifier);
+        //logger.info("getUnaryResponse, unread response count " + unaryResponses.size());
         return response;
     }
 
@@ -185,8 +194,7 @@ public class APIBufferPair<REQ, RESP> implements Serializable, HazelcastInstance
      * @param identifier
      */
     public void acknowledgeRequestStreamCompletion(String identifier) {
-        System.out.println("acknowledgeRequestStreamCompletion for " + identifier);
-        //System.out.println("--disabled for now");
+        //logger.info("acknowledgeRequestStreamCompletion for " + identifier);
         activeRequestStreams.executeOnKey(methodName, (EntryProcessor<String, Set<String>, Object>) entry -> {
             Set<String> streamsForAPI = entry.getValue();
             if (streamsForAPI == null) {
@@ -201,7 +209,7 @@ public class APIBufferPair<REQ, RESP> implements Serializable, HazelcastInstance
     }
 
     public void acknowledgeResponseStreamCompletion(String identifier) {
-        System.out.println("acknowledgeResponseStreamCompletion for " + identifier);
+        //logger.info("acknowledgeResponseStreamCompletion for " + identifier);
         activeResponseStreams.executeOnKey(methodName, (EntryProcessor<String, Set<String>, Object>) entry -> {
             Set<String> streamsForAPI = entry.getValue();
             if (streamsForAPI == null) {

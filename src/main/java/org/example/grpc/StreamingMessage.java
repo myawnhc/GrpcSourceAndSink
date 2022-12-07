@@ -18,12 +18,6 @@ public class StreamingMessage<M> implements Serializable {
      */
     boolean completed;
 
-    public StreamingMessage(UUID identifier, M message) {
-        this.identifier = identifier;
-        this.message = message;
-        this.completed = false;
-    }
-
     public StreamingMessage(UUID identifier, M message, boolean complete) {
         this.identifier = identifier;
         this.message = message;

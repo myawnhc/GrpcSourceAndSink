@@ -23,6 +23,7 @@ public class GrpcConnector implements HazelcastInstanceAware {
         this.hazelcast = hazelcastInstance;
     }
 
+
     // patterned off of https://docs.hazelcast.com/hazelcast/5.2/pipelines/custom-stream-source
     public static <R> StreamSource<MessageWithUUID<R>> grpcUnarySource(String serviceName, String apiName) {
         return SourceBuilder
@@ -30,8 +31,10 @@ public class GrpcConnector implements HazelcastInstanceAware {
                 .<MessageWithUUID<R>>fillBufferFn((grpcContext, sourceBuffer) -> {
                     int messagesAdded = 0;
                     MessageWithUUID<R> message = grpcContext.readUnaryRequest();
-                    while (message != null && messagesAdded++ < 100) {
+                    while (message != null) {
                         sourceBuffer.add(message);
+                        if (messagesAdded++ > 100)
+                            break;
                         message = grpcContext.readUnaryRequest();
                     }
 //                    if (sourceBuffer.size() > 0)
@@ -47,11 +50,13 @@ public class GrpcConnector implements HazelcastInstanceAware {
                 .<StreamingMessage<R>>fillBufferFn((grpcContext, sourceBuffer) -> {
                     int messagesAdded = 0;
                     List<StreamingMessage<R>> messages = grpcContext.readStreamingRequests();
-                    while (!messages.isEmpty() && messagesAdded < 100) {
+                    while (!messages.isEmpty()) {
                         for (StreamingMessage<R> message : messages) {
                             sourceBuffer.add(message);
                             messagesAdded++;
                         }
+                        if (messagesAdded > 100)
+                            break;
                         // Get another batch until we fill the buffer
                         messages = grpcContext.readStreamingRequests();
                     }
@@ -81,6 +86,7 @@ public class GrpcConnector implements HazelcastInstanceAware {
                 .destroyFn(GrpcContext::close)
                 .build();
     }
+
 
     private static class GrpcContext<REQ, RESP> {
         private final APIBufferPair<REQ,RESP> bufferPair;
@@ -121,12 +127,11 @@ public class GrpcConnector implements HazelcastInstanceAware {
                 }
 
             }
-            // Called repeatedly so very noisy if logged
 //            if (results.size() > 0)
 //                logger.info("readStreamingRequests added " + results.size() + " streaming messages");
             return results;
         }
-        int responseCount = 0; // TEMP - DEBUG
+
         public void writeStreamingResponse(StreamingMessage<RESP> streamingMessage) {
             UUID identifier = streamingMessage.getIdentifier();
             RESP message = streamingMessage.getMessage(); // will be empty if completed true
@@ -135,7 +140,6 @@ public class GrpcConnector implements HazelcastInstanceAware {
                 System.out.println("*  writeStreamingResponse marks " + identifier + " complete");
                 bufferPair.markResponseStreamComplete(identifier, message);
             } else {
-                System.out.println("* GrpcContext.writeStreamingResponse " + ++responseCount);
                 bufferPair.putStreamingResponse(identifier, message);
             }
         }

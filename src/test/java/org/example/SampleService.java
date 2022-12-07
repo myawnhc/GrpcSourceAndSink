@@ -30,7 +30,8 @@ import static org.hazelcast.grpcconnector.ExamplesOuterClass.ChatMessage;
 public class SampleService extends ExamplesGrpc.ExamplesImplBase {
 
     private final String serviceName;
-    private final IMap<String, APIBufferPair> bufferPairsForAPI;
+    private final IMap<String, APIBufferPair> bufferPairsForAPI; // In process of deprecation
+
     private final IExecutorService distributedExecutor;
 
     public SampleService(HazelcastInstance hazelcast) {
@@ -64,7 +65,7 @@ public class SampleService extends ExamplesGrpc.ExamplesImplBase {
         APIBufferPair<SimpleRequest,SimpleResponse> unaryHandler = bufferPairsForAPI.get("sayHello");
         UUID identifier = UUID.randomUUID();
         unaryHandler.putUnaryRequest(identifier, request);
-        SimpleResponse response = unaryHandler.getUnaryResponse(identifier);
+        SimpleResponse response = (SimpleResponse) unaryHandler.getUnaryResponse(identifier);
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
