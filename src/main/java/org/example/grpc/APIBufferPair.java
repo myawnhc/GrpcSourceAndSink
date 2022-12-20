@@ -87,15 +87,17 @@ public class APIBufferPair<REQ, RESP> implements Serializable, HazelcastInstance
         RESP response = null;
         int timesSlept = 0;
         while (response == null) {
+            long totalSleep = 0;
             response = unaryResponses.remove(identifier);
             if (response == null) {
                 try {
                     long timeToSleep = (long) Math.pow(2, timesSlept++);
+                    totalSleep += timeToSleep;
 //                    if (timesSlept > 10) {
 //                        logger.info("getUnaryRespoonse " + identifier + " sleeping for " + timeToSleep + "ms.  Unread responses = " + unaryResponses.size());
 //                    }
-                    if (timesSlept > 14) {
-                        logger.warning("getUnaryResponse giving up waiting and returning null");
+                    if (timesSlept > 15) {
+                        logger.warning("getUnaryResponse giving up and returning null after waiting " + totalSleep + "ms");
                         return response;
                     }
                     MILLISECONDS.sleep(timeToSleep);
