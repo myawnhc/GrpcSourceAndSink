@@ -21,6 +21,7 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -31,6 +32,7 @@ public class GrpcServer {
 
     public GrpcServer(BindableService service, int port){
         server = ServerBuilder.forPort(port)
+                .executor(Executors.newFixedThreadPool(16))
                 .addService(service)
                 .build();
         try {
