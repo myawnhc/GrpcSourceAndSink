@@ -19,8 +19,7 @@
 
 package org.example;
 
-import com.hazelcast.config.Config;
-import com.hazelcast.core.Hazelcast;
+import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.jet.Traversers;
 import com.hazelcast.jet.config.JobConfig;
@@ -34,11 +33,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.hazelcast.grpcconnector.ExamplesOuterClass.SimpleRequest;
-import static org.hazelcast.grpcconnector.ExamplesOuterClass.SimpleResponse;
-import static org.hazelcast.grpcconnector.ExamplesOuterClass.RequestWithValue;
-import static org.hazelcast.grpcconnector.ExamplesOuterClass.ResponseWithValue;
-import static org.hazelcast.grpcconnector.ExamplesOuterClass.ChatMessage;
+import static org.hazelcast.grpcconnector.ExamplesOuterClass.*;
 
 public class SamplePipelines {
     private Pipeline createUnaryPipeline() {
@@ -138,9 +133,11 @@ public class SamplePipelines {
     }
 
     public static void main(String[] args) {
-        Config config = new Config();
-        config.getJetConfig().setEnabled(true);
-        HazelcastInstance hazelcast = Hazelcast.newHazelcastInstance(config);
+//        Config config = new Config();
+//        config.getJetConfig().setEnabled(true);
+//        HazelcastInstance hazelcast = Hazelcast.newHazelcastInstance(config);
+
+        HazelcastInstance hazelcast = HazelcastClient.newHazelcastClient();
         SamplePipelines up = new SamplePipelines();
 
         JobConfig jc1 = new JobConfig().setName("sayHello");

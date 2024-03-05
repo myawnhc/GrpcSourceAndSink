@@ -49,7 +49,7 @@ import static org.hazelcast.grpcconnector.ExamplesOuterClass.ChatMessage;
 public class SampleService extends ExamplesGrpc.ExamplesImplBase {
 
     private final String serviceName;
-    private final IMap<String, APIBufferPair> bufferPairsForAPI; // In process of deprecation
+    private final IMap<String, APIBufferPair> bufferPairsForAPI;
 
     private final IExecutorService distributedExecutor;
 
@@ -230,9 +230,9 @@ public class SampleService extends ExamplesGrpc.ExamplesImplBase {
         // cycle through all active streams but if we needed to scale up we could have concurrent threads
         // per active chat connection
         // TODO: note that this is getting called on multiple threads -- we are accomplishing nothing
-        // by declaring a new singleThreadExecutor here, as it just creates a new STE on each
-        // thread.  If we really need to be single-threaded then we need to move the executor
-        // creation out to service scope rather than do it in a method that can be called on any thread.
+        //  by declaring a new singleThreadExecutor here, as it just creates a new STE on each
+        //  thread.  If we really need to be single-threaded then we need to move the executor
+        //  creation out to service scope rather than do it in a method that can be called on any thread.
         Executors.newSingleThreadExecutor().submit(() -> {
             boolean startClosingStreams = false;
             while (true) {
@@ -279,7 +279,7 @@ public class SampleService extends ExamplesGrpc.ExamplesImplBase {
         HazelcastInstance hazelcast = Hazelcast.newHazelcastInstance(config);
         SampleService service = new SampleService(hazelcast);
         // Run until terminated
-        while(true)
-            MINUTES.sleep(60);
+//        while(true)
+//            MINUTES.sleep(60);
     }
 }

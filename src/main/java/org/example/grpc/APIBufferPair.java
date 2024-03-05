@@ -19,20 +19,28 @@
 package org.example.grpc;
 
 import com.hazelcast.collection.IQueue;
+import com.hazelcast.core.EntryEvent;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.HazelcastInstanceAware;
 import com.hazelcast.map.EntryProcessor;
 import com.hazelcast.map.IMap;
+import com.hazelcast.map.listener.EntryAddedListener;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-
+/** A buffer pair is used to associate data being passed into a gRPC source with the
+ *  result that will be returned via a gRPC sink.
+ *
+ * @param <REQ>  Type of request object
+ * @param <RESP> Type of response object
+ */
 public class APIBufferPair<REQ, RESP> implements Serializable, HazelcastInstanceAware {
 
     private transient HazelcastInstance hazelcast;
@@ -93,41 +101,43 @@ public class APIBufferPair<REQ, RESP> implements Serializable, HazelcastInstance
         unaryResponses.put(identifier, response.getMessage());
     }
 
-    /** This call will block until a response is ready, and uses an exponential backoff
-     * Thread.sleep to avoid tightly looping while awaiting the result.
+    class UnaryResponseListener implements EntryAddedListener<UUID, RESP> {
+        private CompletableFuture<RESP> future;
+
+        public UnaryResponseListener(CompletableFuture<RESP> future) {
+            this.future = future;
+        }
+        @Override
+        public void entryAdded(EntryEvent<UUID, RESP> entryEvent) {
+            future.complete(entryEvent.getValue());
+            unaryResponses.remove(entryEvent.getKey());
+            //logger.info("UnaryResponse added for " + entryEvent.getKey() + ", future completed");
+        }
+    }
+
+    /** This call will return a response once ready.
      *
      * @param identifier identifier used to pair the response with the request
      * @return
      */
     public RESP getUnaryResponse(UUID identifier) {
-        //System.out.println("Reading unary response from " + unaryResponses.getName() + " for id " + identifier);
-        RESP response = null;
-        int timesSlept = 0;
-        while (response == null) {
-            long totalSleep = 0;
-            response = unaryResponses.remove(identifier);
-            if (response == null) {
-                try {
-                    long timeToSleep = (long) Math.pow(2, timesSlept++);
-                    totalSleep += timeToSleep;
-//                    if (timesSlept > 10) {
-//                        logger.info("getUnaryRespoonse " + identifier + " sleeping for " + timeToSleep + "ms.  Unread responses = " + unaryResponses.size());
-//                    }
-                    if (timesSlept > 15) {
-                        logger.warning("getUnaryResponse from " + unaryResponses.getName() +
-                                " giving up and returning null after waiting " + totalSleep +
-                                " ms. Unread responses = " + unaryResponses.size());
-                        return response;
-                    }
-                    MILLISECONDS.sleep(timeToSleep);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        CompletableFuture<RESP> future = new CompletableFuture<RESP>();
+        UnaryResponseListener listener = new UnaryResponseListener(future);
+        UUID removalKey = unaryResponses.addEntryListener(listener, identifier, true);
+        try {
+            // Possible that a response arrived before our listener was armed
+            RESP value = unaryResponses.remove(identifier);
+            if (value != null) {
+                logger.info("UnaryResponse was already set for " + identifier + " removing response and (superfluous) listener");
+                return value;
+            } else {
+                return future.get();
             }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        } finally {
+            unaryResponses.removeEntryListener(removalKey);
         }
-        //System.out.println("Done reading unary response " + response + " from " + unaryResponses.getName() + " for id " + identifier);
-        //logger.info("getUnaryResponse, unread response count " + unaryResponses.size());
-        return response;
     }
 
     public void putStreamingRequest(UUID identifier, REQ request) {

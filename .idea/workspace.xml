@@ -4,29 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ae74d82-7251-4bcf-877c-e6b8286030dd" name="Changes" comment="Added info to logging when stalled">
-      <change afterPath="$PROJECT_DIR$/.idea/copyright/Apache.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterDir="false" />
+    <list default="true" id="5ae74d82-7251-4bcf-877c-e6b8286030dd" name="Changes" comment="Update copyright, advance Hazelcast Platform version to 5.3">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/APIBufferPair.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/APIBufferPair.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/Arity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/Arity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcConnector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/MessageWithUUID.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/MessageWithUUID.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/StreamingMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/StreamingMessage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/org/example/APIUnitTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/APIUnitTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/RequestWithValueAggregator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/RequestWithValueAggregator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/SampleClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/SampleClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/SampleNonHZService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/SampleNonHZService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/org/example/SamplePipelines.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/SamplePipelines.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/org/example/SampleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/SampleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/startService.sh" beforeDir="false" afterPath="$PROJECT_DIR$/startService.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -59,10 +54,11 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.28390804",
-    "settings.editor.selected.configurable": "copyright.profiles"
+    "settings.editor.selected.configurable": "editor.preferences.import"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -77,10 +73,10 @@
       <recent name="org.example" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.All in GrpcSourceAndSink (1)">
-    <configuration name="SampleService" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.example.SampleService" />
-      <module name="GrpcSourceAndSink" />
+  <component name="RunManager" selected="JUnit.APIUnitTests (1)">
+    <configuration name="SampleNonHZService" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.example.SampleNonHZService" />
+      <module name="grpc-connectors" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="org.example.*" />
@@ -91,12 +87,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="org.example.SamplePipelines" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="SamplePipelines" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.example.SamplePipelines" />
-      <module name="GrpcSourceAndSink" />
+      <module name="grpc-connectors" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.grpc.*" />
+          <option name="PATTERN" value="org.example.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -104,8 +100,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="APIUnitTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="GrpcSourceAndSink" />
+    <configuration name="SampleService (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.example.SampleService" />
+      <module name="grpc-connectors" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="APIUnitTests (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="grpc-connectors" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="org.example.*" />
@@ -119,29 +128,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="All in GrpcSourceAndSink (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="GrpcSourceAndSink" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="All in GrpcSourceAndSink" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="GrpcSourceAndSink" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
+    <configuration name="java in grpc-connectors" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="grpc-connectors" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.All in GrpcSourceAndSink (1)" />
-        <item itemvalue="Application.org.example.SamplePipelines" />
-        <item itemvalue="Application.SampleService" />
-        <item itemvalue="JUnit.All in GrpcSourceAndSink" />
-        <item itemvalue="JUnit.APIUnitTests" />
+        <item itemvalue="JUnit.APIUnitTests (1)" />
+        <item itemvalue="Application.SamplePipelines" />
+        <item itemvalue="Application.SampleService (1)" />
+        <item itemvalue="JUnit.java in grpc-connectors" />
+        <item itemvalue="Application.SampleNonHZService" />
       </list>
     </recent_temporary>
   </component>
@@ -203,7 +204,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679329923999</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Update copyright, advance Hazelcast Platform version to 5.3">
+      <created>1684778450398</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1684778450398</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -225,7 +233,8 @@
     <MESSAGE value="Adjusted timeout in getUnaryResponse based on testing with AccountService" />
     <MESSAGE value="Limit size of executor threadpool" />
     <MESSAGE value="Added info to logging when stalled" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added info to logging when stalled" />
+    <MESSAGE value="Update copyright, advance Hazelcast Platform version to 5.3" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update copyright, advance Hazelcast Platform version to 5.3" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -237,10 +246,14 @@
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/example/grpc/APIBufferPair.java</url>
-          <line>220</line>
+          <line>229</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

@@ -21,10 +21,8 @@ package org.example;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.hazelcast.client.HazelcastClient;
-
 import com.hazelcast.core.HazelcastInstance;
 import io.grpc.stub.StreamObserver;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -39,11 +37,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.hazelcast.grpcconnector.ExamplesOuterClass.SimpleRequest;
-import static org.hazelcast.grpcconnector.ExamplesOuterClass.SimpleResponse;
-import static org.hazelcast.grpcconnector.ExamplesOuterClass.RequestWithValue;
-import static org.hazelcast.grpcconnector.ExamplesOuterClass.ResponseWithValue;
-import static org.hazelcast.grpcconnector.ExamplesOuterClass.ChatMessage;
+import static org.hazelcast.grpcconnector.ExamplesOuterClass.*;
 
 public class APIUnitTests {
 
@@ -219,11 +213,11 @@ public class APIUnitTests {
         final int NUM_THREADS = 3;
         final int MESSAGES_PER_THREAD = 10;
         String[] identifiers = new String[NUM_THREADS];
-        int totalMessagesSent = 0;
+        final AtomicInteger totalMessagesSent = new AtomicInteger();
         final AtomicInteger totalMessagesReceived = new AtomicInteger();
         final CountDownLatch latch = new CountDownLatch(NUM_THREADS);
 
-        // Need to establish all IDS up front so we can send to receivers
+        // Need to establish all IDS up front, so we can send to receivers
         // created later than the sender ...
         for (int i=0; i<NUM_THREADS; i++) {
             identifiers[i] = UUID.randomUUID().toString();
@@ -238,7 +232,7 @@ public class APIUnitTests {
                     String sender = chatMessage.getSenderID();
                     totalMessagesReceived.getAndIncrement();
                     System.out.println("Received message " + totalMessagesReceived + " on thread " + threadIndex);
-                    // Make sure message indended for us
+                    // Make sure message intended for us
                     //Assertions.assertEquals(identifiers[threadIndex], intendedReceiver);
                 }
 
@@ -267,14 +261,14 @@ public class APIUnitTests {
                         .setMessage("message " + j + " from " + sender + " to " + receiver)
                         .build();
                 senderStub.onNext(toSend);
-                totalMessagesSent++;
+                totalMessagesSent.getAndIncrement();
                 //System.out.println("Send #" + totalMessagesSent + " " + toSend );
             }
             senderStub.onCompleted();
         }
         System.out.println("Finished sending " + totalMessagesSent + " chat messages, awaiting responses");
         latch.await(1, TimeUnit.MINUTES);
-        Assertions.assertEquals(totalMessagesSent, totalMessagesReceived.get());
+        Assertions.assertEquals(totalMessagesSent.get(), totalMessagesReceived.get());
     }
 
 

@@ -20,8 +20,9 @@
 package org.example.grpc;
 
 import io.grpc.BindableService;
+import io.grpc.Grpc;
+import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
-import io.grpc.ServerBuilder;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -34,10 +35,11 @@ public class GrpcServer {
     private final Server server;
 
     public GrpcServer(BindableService service, int port){
-        server = ServerBuilder.forPort(port)
+        server = Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create())
                 .executor(Executors.newFixedThreadPool(16))
                 .addService(service)
                 .build();
+
         try {
             server.start();
             logger.info("GrpcServer started, listening on " + port);
