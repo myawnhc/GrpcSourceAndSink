@@ -223,31 +223,59 @@ public class APIUnitTests {
             identifiers[i] = UUID.randomUUID().toString();
         }
 
+        // Shared receiver rather than receiver-per-thread
+        StreamObserver<ChatMessage> receiverStub = new StreamObserver<>() {
+            @Override
+            public void onNext(ChatMessage chatMessage) {
+                // without sync, the printed tmr value may appear wrong ... if we remove the
+                // logging we can get rid of the sync
+                synchronized ( totalMessagesReceived ) {
+//                        String intendedReceiver = chatMessage.getReceiverID();
+//                        String sender = chatMessage.getSenderID();
+                    int tmr = totalMessagesReceived.getAndIncrement();
+                    System.out.println("Received message " + tmr + ":  " + chatMessage.getMessage() + " on thread " + Thread.currentThread().getId());
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Assertions.fail(throwable);
+                latch.countDown();
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("onCompleted, count down on " + Thread.currentThread().getId());
+                latch.countDown();
+            }
+        };
+
         for (int i=0; i<NUM_THREADS; i++) {
             final int threadIndex = i;
-            StreamObserver<ChatMessage> receiverStub = new StreamObserver<>() {
-                @Override
-                public void onNext(ChatMessage chatMessage) {
-                    String intendedReceiver = chatMessage.getReceiverID();
-                    String sender = chatMessage.getSenderID();
-                    totalMessagesReceived.getAndIncrement();
-                    System.out.println("Received message " + totalMessagesReceived + " on thread " + threadIndex);
-                    // Make sure message intended for us
-                    //Assertions.assertEquals(identifiers[threadIndex], intendedReceiver);
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-                    Assertions.fail(throwable);
-                    latch.countDown();
-                }
-
-                @Override
-                public void onCompleted() {
-                    //System.out.println("Stream marked complete");
-                    latch.countDown();
-                }
-            };
+//            StreamObserver<ChatMessage> receiverStub = new StreamObserver<>() {
+//                @Override
+//                public void onNext(ChatMessage chatMessage) {
+//                    // without sync, the printed tmr value may appear wrong ... if we remove the
+//                    // logging we can get rid of the sync
+//                    synchronized ( totalMessagesReceived ) {
+////                        String intendedReceiver = chatMessage.getReceiverID();
+////                        String sender = chatMessage.getSenderID();
+//                        int tmr = totalMessagesReceived.getAndIncrement();
+//                        System.out.println("Received message " + tmr + ":  " + chatMessage.getMessage() + " on thread " + threadIndex);
+//                    }
+//                }
+//
+//                @Override
+//                public void onError(Throwable throwable) {
+//                    Assertions.fail(throwable);
+//                    latch.countDown();
+//                }
+//
+//                @Override
+//                public void onCompleted() {
+//                    latch.countDown();
+//                }
+//            };
             String sender = identifiers[i];
             StreamObserver<ChatMessage> senderStub = client.chat(receiverStub);
             for (int j=0; j<MESSAGES_PER_THREAD; j++) {
@@ -262,8 +290,9 @@ public class APIUnitTests {
                         .build();
                 senderStub.onNext(toSend);
                 totalMessagesSent.getAndIncrement();
-                //System.out.println("Send #" + totalMessagesSent + " " + toSend );
+                //OK: System.out.println("Send #" + totalMessagesSent + " " + toSend );
             }
+            System.out.println("Marking sender " + i + " complete");
             senderStub.onCompleted();
         }
         System.out.println("Finished sending " + totalMessagesSent + " chat messages, awaiting responses");
