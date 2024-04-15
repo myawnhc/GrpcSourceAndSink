@@ -128,7 +128,7 @@ public class APIBufferPair<REQ, RESP> implements Serializable, HazelcastInstance
             // Possible that a response arrived before our listener was armed
             RESP value = unaryResponses.remove(identifier);
             if (value != null) {
-                logger.info("UnaryResponse was already set for " + identifier + " removing response and (superfluous) listener");
+                //logger.info("UnaryResponse was already set for " + identifier + " removing response and (superfluous) listener");
                 return value;
             } else {
                 return future.get();

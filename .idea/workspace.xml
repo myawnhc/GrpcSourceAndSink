@@ -4,16 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ae74d82-7251-4bcf-877c-e6b8286030dd" name="Changes" comment="Update copyright, advance Hazelcast Platform version to 5.3">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="5ae74d82-7251-4bcf-877c-e6b8286030dd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/APIBufferPair.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/APIBufferPair.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcConnector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/org/example/APIUnitTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/APIUnitTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/RequestWithValueAggregator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/RequestWithValueAggregator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/org/example/SamplePipelines.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/SamplePipelines.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/org/example/SampleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/SampleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/startService.sh" beforeDir="false" afterPath="$PROJECT_DIR$/startService.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +56,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
-    "project.structure.last.edited": "Project",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.28390804",
     "settings.editor.selected.configurable": "editor.preferences.import"
@@ -73,20 +74,7 @@
       <recent name="org.example" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.APIUnitTests (1)">
-    <configuration name="SampleNonHZService" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.example.SampleNonHZService" />
-      <module name="grpc-connectors" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.example.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.SampleService (1)">
     <configuration name="SamplePipelines" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.example.SamplePipelines" />
       <module name="grpc-connectors" />
@@ -128,21 +116,45 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="java in grpc-connectors" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="APIUnitTests.testBidirectionalStreamingAsync" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="grpc-connectors" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/src/test/java" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.APIUnitTests" />
+      <option name="METHOD_NAME" value="testBidirectionalStreamingAsync" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="APIUnitTests.testClientStreamingBlocking" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="grpc-connectors" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.APIUnitTests" />
+      <option name="METHOD_NAME" value="testClientStreamingBlocking" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.APIUnitTests (1)" />
+        <item itemvalue="JUnit.APIUnitTests.testBidirectionalStreamingAsync" />
         <item itemvalue="Application.SamplePipelines" />
         <item itemvalue="Application.SampleService (1)" />
-        <item itemvalue="JUnit.java in grpc-connectors" />
-        <item itemvalue="Application.SampleNonHZService" />
+        <item itemvalue="JUnit.APIUnitTests (1)" />
+        <item itemvalue="JUnit.APIUnitTests.testClientStreamingBlocking" />
       </list>
     </recent_temporary>
   </component>
@@ -211,7 +223,23 @@
       <option name="project" value="LOCAL" />
       <updated>1684778450398</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Improve getUnaryResponse by using map listener rather than polling with timed backoff.  Also updated README.">
+      <option name="closed" value="true" />
+      <created>1709647765931</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1709647765931</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Fixed bidistreaming unit test - will now pass on initial run, but fails if re-run without restarting service. Some cleanup must be missing but haven't isolated the issue yet.">
+      <option name="closed" value="true" />
+      <created>1711554221950</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1711554221950</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -234,14 +262,16 @@
     <MESSAGE value="Limit size of executor threadpool" />
     <MESSAGE value="Added info to logging when stalled" />
     <MESSAGE value="Update copyright, advance Hazelcast Platform version to 5.3" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update copyright, advance Hazelcast Platform version to 5.3" />
+    <MESSAGE value="Improve getUnaryResponse by using map listener rather than polling with timed backoff.  Also updated README." />
+    <MESSAGE value="Fixed bidistreaming unit test - will now pass on initial run, but fails if re-run without restarting service. Some cleanup must be missing but haven't isolated the issue yet." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed bidistreaming unit test - will now pass on initial run, but fails if re-run without restarting service. Some cleanup must be missing but haven't isolated the issue yet." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/example/grpc/GrpcConnector.java</url>
-          <line>129</line>
+          <line>125</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint type="java-line">

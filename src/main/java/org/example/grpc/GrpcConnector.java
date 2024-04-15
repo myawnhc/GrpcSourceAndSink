@@ -56,8 +56,6 @@ public class GrpcConnector implements HazelcastInstanceAware {
                             break;
                         message = grpcContext.readUnaryRequest();
                     }
-//                    if (sourceBuffer.size() > 0)
-//                        logger.info("fillBufferFn added " + messagesAdded + " messages");
                 })
                 .destroyFn(GrpcContext::close)
                 .build();
@@ -79,8 +77,6 @@ public class GrpcConnector implements HazelcastInstanceAware {
                         // Get another batch until we fill the buffer
                         messages = grpcContext.readStreamingRequests();
                     }
-//                    if (sourceBuffer.size() > 0)
-//                        logger.info("fillBufferFn added " + messagesAdded + " messages");
                 })
                 .destroyFn(GrpcContext::close)
                 .build();
@@ -146,8 +142,6 @@ public class GrpcConnector implements HazelcastInstanceAware {
                 }
 
             }
-//            if (results.size() > 0)
-//                logger.info("readStreamingRequests added " + results.size() + " streaming messages");
             return results;
         }
 
@@ -156,7 +150,7 @@ public class GrpcConnector implements HazelcastInstanceAware {
             RESP message = streamingMessage.getMessage(); // will be empty if completed true
             boolean completed = streamingMessage.isComplete();
             if (completed) {
-                System.out.println("*  writeStreamingResponse marks " + identifier + " complete");
+                logger.info("GrpcContext.writeStreamingResponse marks " + identifier + " complete");
                 bufferPair.markResponseStreamComplete(identifier, message);
             } else {
                 bufferPair.putStreamingResponse(identifier, message);

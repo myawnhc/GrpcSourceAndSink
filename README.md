@@ -30,8 +30,6 @@ The GrpcConnector class has the Source and Sink implementation that will be used
 
 When implementing a gRPC server, there will be one or more classes that implement the proto APIs defined by the gRPC .proto file.  These implementation classes will take requests coming from the gRPC clients and write them to the input side of an APIBufferPair; they will then read the resulting response from the output side of the APIBufferPair. 
 
-
-
 ## Building 
 
 Use maven to build the project. 
@@ -52,6 +50,7 @@ Unit tests here are not standalone; in order to run them do the following (all r
 - Run APIUnitTests 
   
 ### Current Testing issues
-The Bidirectional Streaming unit test fails consistently.  This might be due to non-thread-safe behavior in the SampleService chat but nothing is certain at this point. 
+The Bidirectional Streaming unit passes on initial run, but will fail if re-run without restarting
+the service. Suspect that some clean-up isn't happening correctly but have not isolated the issue. 
 
 

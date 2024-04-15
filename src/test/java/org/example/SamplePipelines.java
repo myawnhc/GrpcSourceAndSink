@@ -55,7 +55,7 @@ public class SamplePipelines {
     private Pipeline createClientStreamingPipeline() {
 
         Pipeline p = Pipeline.create();
-        //p.setPreserveOrder(true); // seeing 'onComplete' before all streaming inputs are seen!
+        p.setPreserveOrder(true); // seeing 'onComplete' before all streaming inputs are seen!
 
         p.readFrom(GrpcConnector.<RequestWithValue>grpcStreamingSource("hz.grpc.Examples", "add"))
                 .withoutTimestamps()

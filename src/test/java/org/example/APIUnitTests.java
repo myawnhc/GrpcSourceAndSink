@@ -34,6 +34,8 @@ import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -122,7 +124,7 @@ public class APIUnitTests {
 
         // Because responses come back async, if we don't have this CountDownLatch we
         // will exit, trigger half-close of socket to server and premature termination
-        final CountDownLatch latch = new CountDownLatch(1);
+        final CountDownLatch latch = new CountDownLatch(5);
 
         StreamObserver<ResponseWithValue> responseObserver = new StreamObserver<>() {
             private int responsesReceived = 0;
@@ -130,7 +132,8 @@ public class APIUnitTests {
             @Override
             public void onNext(ResponseWithValue responseWithValue) {
                 Assertions.assertEquals(137, responseWithValue.getOutputValue());
-                Assertions.assertEquals(1, ++responsesReceived);
+                // Had this before we started running concurrent threads - no longer a valid assert
+                //Assertions.assertEquals(1, ++responsesReceived);
             }
 
             @Override
@@ -145,13 +148,25 @@ public class APIUnitTests {
             }
         };
 
-        StreamObserver<RequestWithValue> requestObserver = client.addAsync(responseObserver);
-        requestObserver.onNext(m1);
-        requestObserver.onNext(m2);
-        requestObserver.onNext(m3);
-        requestObserver.onNext(m4);
-        requestObserver.onNext(m5);
-        requestObserver.onCompleted();
+        Runnable doAdds = () -> {
+            StreamObserver<RequestWithValue> requestObserver = client.addAsync(responseObserver);
+            requestObserver.onNext(m1);
+            Thread.yield(); // make sure we get interleaving of items from different threads
+            requestObserver.onNext(m2);
+            Thread.yield();
+            requestObserver.onNext(m3);
+            Thread.yield();
+            requestObserver.onNext(m4);
+            Thread.yield();
+            requestObserver.onNext(m5);
+            Thread.yield();
+            requestObserver.onCompleted();
+        };
+        ExecutorService run5 = Executors.newFixedThreadPool(5);
+        for (int i=0; i<5; i++) {
+            run5.submit(doAdds);
+        }
+
         latch.await(1, TimeUnit.MINUTES);
     }
 
@@ -251,31 +266,6 @@ public class APIUnitTests {
         };
 
         for (int i=0; i<NUM_THREADS; i++) {
-            final int threadIndex = i;
-//            StreamObserver<ChatMessage> receiverStub = new StreamObserver<>() {
-//                @Override
-//                public void onNext(ChatMessage chatMessage) {
-//                    // without sync, the printed tmr value may appear wrong ... if we remove the
-//                    // logging we can get rid of the sync
-//                    synchronized ( totalMessagesReceived ) {
-////                        String intendedReceiver = chatMessage.getReceiverID();
-////                        String sender = chatMessage.getSenderID();
-//                        int tmr = totalMessagesReceived.getAndIncrement();
-//                        System.out.println("Received message " + tmr + ":  " + chatMessage.getMessage() + " on thread " + threadIndex);
-//                    }
-//                }
-//
-//                @Override
-//                public void onError(Throwable throwable) {
-//                    Assertions.fail(throwable);
-//                    latch.countDown();
-//                }
-//
-//                @Override
-//                public void onCompleted() {
-//                    latch.countDown();
-//                }
-//            };
             String sender = identifiers[i];
             StreamObserver<ChatMessage> senderStub = client.chat(receiverStub);
             for (int j=0; j<MESSAGES_PER_THREAD; j++) {
@@ -299,6 +289,4 @@ public class APIUnitTests {
         latch.await(1, TimeUnit.MINUTES);
         Assertions.assertEquals(totalMessagesSent.get(), totalMessagesReceived.get());
     }
-
-
 }
