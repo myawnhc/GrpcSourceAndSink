@@ -19,12 +19,12 @@
 
 package org.example;
 
-import java.io.Serializable;
-import java.util.UUID;
-
 import com.hazelcast.jet.aggregate.AggregateOperation;
 import com.hazelcast.jet.aggregate.AggregateOperation1;
 import com.hazelcast.jet.datamodel.Tuple3;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 import static org.hazelcast.grpcconnector.ExamplesOuterClass.RequestWithValue;
 
@@ -68,6 +68,10 @@ public class RequestWithValueAggregator implements Serializable {
             accumulatedValue += valueToAdd;
         }
         completed = tuple3.f2();
+//        if (completed)
+//            System.out.println("RWVA sees completion with value  " + tuple3.f1().getInputValue() + " for  " + clientIdentifier + " on Thread " + Thread.currentThread().getId()  + " giving " + accumulatedValue);
+//        else
+//            System.out.println("RWVA added " + tuple3.f1().getInputValue() + " for  " + clientIdentifier + " on Thread " + Thread.currentThread().getId()  + " giving " + accumulatedValue);
         return this;
     }
 
